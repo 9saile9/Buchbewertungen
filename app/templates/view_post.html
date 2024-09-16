@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <div class="card mt-4">
+		<h3><strong>Buchpost:</strong></h3>
+        <div class="card-body">
+            <h4 class="card-title">{{ post.title }}</h4>
+            <p class="card-text">{{ post.general_info }}</p>
+			<p><strong>Initiale Bewertung:</strong> {{ "%.1f"|format(post.initial_rating) }}
+            <p><strong>Durchschnittliche Bewertung:</strong> {{ "%.1f"|format(average_rating) }}/5</p>
+        </div>
+        <div class="card-footer text-muted">
+            Gepostet von: {{ post.author.username }} am {{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </div>
+    </div>
+
+	<hr>
+    <div class="mt-4">
+        <h3><strong>Antworten:</strong></h3>
+        {% for reply in post.responses %}
+            <div class="media mb-3">
+                <div class="media-body">
+                    <h6 class="mt-0">{{ reply.user.username }}</h6>
+                    <p>{{ reply.body }}</p>
+                    {% if reply.rating %}
+                        <small class="text-muted">Bewertung: {{ "%.1f"|format(reply.rating) }}/5</small>
+                    {% endif %}
+                    <small class="text-muted">{{ reply.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+    <div class="mt-4">
+        <h4><strong>Eine Antwort schreiben:</strong></h4>
+        {{ wtf.quick_form(form) }}
+    </div>
+{% endblock %}
